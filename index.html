@@ -21,7 +21,7 @@
       initialize the SDK after all desired features are loaded, set useEmulator to false
       to avoid connecting the SDK to running emulators.
     -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <script defer src="/__/firebase/init.js?useEmulator=false"></script>
     <!--use CDN to get the dynamic builtin firebase auth UI SDK to guide user login/out/register -->
     <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css"/>
@@ -640,11 +640,32 @@
         // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
         // // The Firebase SDK is initialized and available here!
         //
+//         设置身份验证状态观察者并获取用户数据
+//         针对应用中需要已登录用户的信息的每个页面，将观察者附加到全局身份验证对象。每当用户的登录状态发生变化时，系统都会调用此观察者。
+//
+// 请使用 onAuthStateChanged 方法附加观察者。当用户成功登录时，您可以从观察者中获取用户的相关信息。
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 // User is signed in, see docs for a list of available properties
                 // https://firebase.google.com/docs/reference/js/firebase.User
-                var uid = user.uid;
+                name = user.displayName;
+                email = user.email;
+                photoUrl = user.photoURL;
+                emailVerified = user.emailVerified;
+                uid = user.uid;  // The user's ID, unique to the Firebase project. Do NOT use
+                                 // this value to authenticate with your backend server, if
+                                 // you have one. Use User.getToken() instead.
+                user.providerData.forEach(function (profile) {
+                    console.log("Sign-in provider: " + profile.providerId);
+                    console.log("  Provider-specific UID: " + profile.uid);
+                    console.log("  Name: " + profile.displayName);
+                    console.log("  Email: " + profile.email);
+                    console.log("  Photo URL: " + profile.photoURL);
+                });
+                console.info("detected signedin user with UID:%s",uid);
+
+
+
                 // ...
             } else {
                 // User is signed out
@@ -664,6 +685,8 @@
         // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
         try {
+
+
             let app = firebase.app();
             let features = [
                 'auth',
@@ -676,10 +699,18 @@
                 'performance',
             ].filter(feature => typeof app[feature] === 'function');
             loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-
+// Temp variable to hold the anonymous user data if needed.
+            var data = null;
+// Hold a reference to the anonymous current user.
+            var anonymousUser = firebase.auth().currentUser;
             // Initialize the FirebaseUI Widget using Firebase.
             var ui = new firebaseui.auth.AuthUI(firebase.auth());
             ui.start('#firebaseui-auth-container', {
+                // Whether to upgrade anonymous users should be explicitly provided.
+                // The user must already be signed in anonymously before FirebaseUI is
+                // rendered.
+                autoUpgradeAnonymousUsers: true,
+                signInSuccessUrl: '<url-to-redirect-to-on-success>',
                 signInOptions: [
                     // List of OAuth providers supported.
                     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -687,7 +718,24 @@
                         provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,//password/email login
                         signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD//email link login
                     }
-                ],
+                ],callbacks: {
+                    // signInFailure callback must be provided to handle merge conflicts which
+                    // occur when an existing credential is linked to an anonymous user.
+                    signInFailure: function(error) {
+                        // For merge conflicts, the error.code will be
+                        // 'firebaseui/anonymous-upgrade-merge-conflict'.
+                        if (error.code != 'firebaseui/anonymous-upgrade-merge-conflict') {
+                            return Promise.resolve();
+                        }
+                        // The credential the user tried to sign in with.
+                        var cred = error.credential;
+                        // Copy data from anonymous user to permanent user and delete anonymous
+                        // user.
+                        // ...
+                        // Finish sign-in after data is copied.
+                        return firebase.auth().signInWithCredential(cred);
+                    }
+                }
                 // Other config options...
             });
             // Is there an email link sign-in?
@@ -727,13 +775,67 @@
             };
             // The start method will wait until the DOM is loaded.
             ui.start('#firebaseui-auth-container', uiConfig);
+
+//注册新用户
+            // 创建一个表单，允许新用户使用自己的电子邮件地址和密码注册您的应用。当用户填好该表单后，验证用户提供的电子邮件地址和密码，然后将其传递给 createUserWithEmailAndPassword 方法：
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Signed in
+                    var user = userCredential.user;
+                    // ...
+
+                    var actionCodeSettings = {
+                        // URL you want to redirect back to. The domain (www.example.com) for this
+                        // URL must be in the authorized domains list in the Firebase Console.
+                        url: 'douglasproject.web.app',
+                        // This must be true.
+                        handleCodeInApp: true,
+                        iOS: {
+                            bundleId: 'com.example.ios'
+                        },
+                        android: {
+                            packageName: 'com.example.android',
+                            installApp: true,
+                            minimumVersion: '12'
+                        },
+                        dynamicLinkDomain: 'douglasproject.web.app'
+                    };
+                })
+                .catch((error) => {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    // ..
+                });
+//现有用户登录
+//     创建一个表单，允许现有用户使用自己的电子邮件地址和密码登录。当用户填好该表单后，调用 signInWithEmailAndPassword 方法：
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Signed in
+                    var user = userCredential.user;
+                    // ...
+
+                })
+                .catch((error) => {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                });
+
+//如需将用户退出登录，请调用 signOut：
+            firebase.auth().signOut().then(() => {
+                // Sign-out successful.
+            }).catch((error) => {
+                // An error happened.
+            });
+
+
+
+
+
         } catch (e) {
             console.error(e);
             loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
         }
     });
-
-
 </script>
 
 <main id="main" class="Prices__Main-sc-1cesgyc-3 priceTable">
