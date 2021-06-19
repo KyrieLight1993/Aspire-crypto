@@ -1,173 +1,841 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Welcome to Firebase Hosting</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Our first web page</title>
 
-  <!-- update the version number as needed -->
-  <script defer src="/__/firebase/8.6.2/firebase-app.js"></script>
-  <!-- include only the Firebase features as you need -->
-  <script defer src="/__/firebase/8.6.2/firebase-auth.js"></script>
-  <script defer src="/__/firebase/8.6.2/firebase-database.js"></script>
-  <script defer src="/__/firebase/8.6.2/firebase-firestore.js"></script>
-  <script defer src="/__/firebase/8.6.2/firebase-functions.js"></script>
-  <script defer src="/__/firebase/8.6.2/firebase-messaging.js"></script>
-  <script defer src="/__/firebase/8.6.2/firebase-storage.js"></script>
-  <script defer src="/__/firebase/8.6.2/firebase-analytics.js"></script>
-  <script defer src="/__/firebase/8.6.2/firebase-remote-config.js"></script>
-  <script defer src="/__/firebase/8.6.2/firebase-performance.js"></script>
-  <!--    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>-->
-  <!--    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />-->
-  <!--
-    initialize the SDK after all desired features are loaded, set useEmulator to false
-    to avoid connecting the SDK to running emulators.
-  -->
-  <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-  <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
-  <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/8.6.2/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/8.6.2/firebase-auth.js"></script>
+    <script defer src="/__/firebase/8.6.2/firebase-database.js"></script>
+    <script defer src="/__/firebase/8.6.2/firebase-firestore.js"></script>
+    <script defer src="/__/firebase/8.6.2/firebase-functions.js"></script>
+    <script defer src="/__/firebase/8.6.2/firebase-messaging.js"></script>
+    <script defer src="/__/firebase/8.6.2/firebase-storage.js"></script>
+    <script defer src="/__/firebase/8.6.2/firebase-analytics.js"></script>
+    <script defer src="/__/firebase/8.6.2/firebase-remote-config.js"></script>
+    <script defer src="/__/firebase/8.6.2/firebase-performance.js"></script>
+    <!--
+      initialize the SDK after all desired features are loaded, set useEmulator to false
+      to avoid connecting the SDK to running emulators.
+    -->
+    <script defer src="/__/firebase/init.js?useEmulator=false"></script>
+    <!--use CDN to get the dynamic builtin firebase auth UI SDK to guide user login/out/register -->
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css"/>
 
-  <style media="screen">
-    body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-    #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-    #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-    #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-    #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-    #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-    #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-    #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-    @media (max-width: 600px) {
-      body, #message { margin-top: 0; background: white; box-shadow: none; }
-      body { border-top: 16px solid #ffa100; }
-    }
-  </style>
+    <style media="screen" type="text/css">
+        body {
+            display: flex;
+            flex: 1 1 auto;
+            flex-direction: column;
+            min-height: 200px;
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            background-color: transparent;
+            align-items: center;
+        }
+
+        a {
+            background-color: transparent;
+            display: inline-block;
+            color: black;
+            text-decoration: none;
+        }
+        .priceTableContinor {
+            border: 1px solid rgb(236, 239, 241);
+            box-shadow:rgba(0, 0, 0, 0.05) 0px 0.1rem 0.3rem, rgba(0, 0, 0, 0.05) 0px 0.1rem 0.2rem, rgba(0, 0, 0, 0.05) 0px 0.5rem 1.5rem;
+            border:0;
+            width: auto;
+            border-radius: 0px;
+            overflow-x: auto;
+        }
+        .priceTable {
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            width: 100%;
+            max-width: 1180px;
+            padding: 24px 20px;
+            background: rgb(255, 255, 255);
+
+        }
+
+        .tableOptionTopBar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            justify-content: space-between;
+        }
+
+        .assetSortBtnUl {
+            display: flex;
+            flex-grow: 0;
+            padding: 0px;
+            list-style: none;
+            flex-shrink: 0;
+            margin: 0px;
+        }
+
+        .selctedAssetBtns {
+            padding: 6px 24px;
+            background-color: rgb(241, 245, 254);
+            border-radius: 100px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .selctBtnText {
+            color: rgb(22, 82, 240);
+        }
+
+        .unselctAssetBtns {
+            padding: 6px 24px;
+            background-color: transparent;
+            border-radius: 100px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .unselctAssetSortBtn {
+            margin-left: 32px;
+            color: rgb(88, 112, 136);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .selctAssetSortBtn {
+            margin-left: 32px;
+            color: rgb(22, 82, 240);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .coinsTable {
+            width: 100%;
+            padding: 0px;
+            background: rgb(255, 255, 255);
+            border-spacing: 0px;
+            border-collapse: separate;
+            caption-side: top;
+        }
+
+        .leve2SortingBar {
+            border: none;
+        }
+
+        thead {
+            display: table-header-group;
+            vertical-align: middle;
+            border-color: inherit;
+        }
+
+        .theadTexts {
+            font-weight: 400;
+            font-size: 12px;
+        }
+
+        .theadTextsClickable {
+            font-family: Graphik, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.6;
+            color: rgba(17, 51, 83, 0.6);
+            transition: color 80ms ease-in-out 0s;
+        }
+
+        .theadTextsNoClickable {
+            font-family: Graphik, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.6;
+            color: rgba(17, 51, 83, 0.6);
+            transition: color 80ms ease-in-out 0s;
+        }
+
+        .nameSortingBtn {
+            padding: 16px 30px 16px 0px;
+            border-bottom: 1px solid rgb(236, 239, 241);
+            cursor: pointer;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .priceChangeMarketCapSortingBtns {
+            padding: 16px 30px 16px 0px;
+            border-bottom: 1px solid rgb(236, 239, 241);
+            cursor: pointer;
+            text-align: right;
+            vertical-align: top;
+        }
+
+        .priceChartTradeSortingBtn {
+            padding: 16px 30px 16px 0px;
+            border-bottom: 1px solid rgb(236, 239, 241);
+            text-align: center;
+            vertical-align: top;
+        }
+
+        .tableRows {
+            background: rgb(255, 255, 255);
+            user-select: none;
+        }
+
+        .rowNameContents {
+            padding: 14px 30px 14px 0px;
+            cursor: pointer;
+            width: 300px;
+        }
+
+        .rowNameContents:first-child {
+            padding-left: 24px;
+        }
+
+        .pictureAndName {
+            display: flex;
+            flex: 1 1 auto;
+            align-items: center;
+            flex-direction: row;
+        }
+
+        .names {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .names h4 {
+            padding-left: 16px;
+        }
+
+        .fullName {
+            text-align: left;
+            font-size: 16px;
+        }
+
+        .shortcutName {
+            font-family: Graphik, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.3;
+            color: rgba(17, 51, 83, 0.6);
+            font-size: 18px;
+            font-weight: 400;
+        }
+        .priceChangeContents {
+          font-size: 16px;
+          width: 100%;
+          text-align: center;
+          font-variant-numeric: tabular-nums;
+        }
+        .allPriceChangeRiseTexts  {
+          font-family: Graphik, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+          line-height: 1.3;
+          color: rgb(223, 95, 103);
+          font-size: 18px;
+          font-weight: 400;
+        }
+        .allPriceChangeFallTexts {
+          font-family: Graphik, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+          line-height: 1.3;
+          color: rgb(5, 177, 105);
+          font-size: 18px;
+          font-weight: 400;
+        }
+        .priceChartLineGraph {
+          padding: 14px 30px 14px 0px;
+          cursor: default;
+          width: 110px;
+        }
+
+        .tradeBtnContiner {
+          cursor: default;
+          width: 70px;
+          padding: 13px 30px 13px 0px;
+        }
+        .tradeBtnContiner:last-child {
+          padding-right: 24px;
+          width: 70px;
+        }
+        .tradeBtn {
+          white-space: nowrap;
+          padding: 8px 16px;
+        }
+         .tradeBtnText {
+           position: relative;
+           width: auto;
+           margin: 0px;
+           border-radius: 4px;
+           color: rgb(255, 255, 255);
+           cursor: pointer;
+           transition: all 80ms ease-in-out 0s;
+           padding: 12px 16px;
+           font-size: 14px;
+           border: 1px solid red;
+           background-color: red;
+         }
+
+        .allTableTexts {
+            font-family: Graphik, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.3;
+            color: rgb(5, 15, 25);
+            font-size: 18px;
+            font-weight: 400;
+            margin: 0px;
+        }
+
+        .botIndexBar {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 32px;
+        }
+        .botIndexContiner {
+            display: flex;
+        }
+        .pageBackBtn {
+            margin-right: 8px;
+            width: 32px;
+            height: 32px;
+        }
+        .allPageBtnContainer {
+            margin-right: 8px;
+        }
+        .selectedPageIndexBtn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 16px;
+            box-sizing: border-box;
+            background-color: rgb(22, 82, 240);
+            color: rgb(255, 255, 255);
+            font-weight: 500;
+        }
+        .notSelectedPageIndexBtns {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 16px;
+            box-sizing: border-box;
+        }
+        .goNextPageIndexBtn {
+            width: 32px;
+            height: 32px;
+        }
+        .goNextPageIndexBtnIcon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            border-radius: 16px;
+            box-sizing: border-box;
+        }
+        .allAesstsBotIndexBar {
+            margin-top: 16px;
+        }
+        .allAesstsBotIndexBarText {
+            display: inline-block;
+            font-family: Graphik, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            font-weight: 400;
+            line-height: 1.5;
+            font-size: 12px;
+            color: rgba(17, 51, 83, 0.6);
+            word-break: break-word;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        div {
+            display: block;
+        }
+
+        Style Attribute {
+            --foreground: rgb(var(--gray100));
+            --foreground-muted: rgb(var(--gray60));
+            --background: rgb(var(--gray0));
+            --background-alternate: rgb(var(--gray5));
+            --background-overlay: rgba(var(--gray80), 0.33);
+            --line: rgba(var(--gray60), 0.2);
+            --line-heavy: rgba(var(--gray60), 0.66);
+            --primary: rgb(var(--blue60));
+            --primary-wash: rgb(var(--blue0));
+            --primary-foreground: rgb(var(--gray0));
+            --negative: rgb(var(--red60));
+            --negative-foreground: rgb(var(--gray0));
+            --positive: rgb(var(--green60));
+            --positive-foreground: rgb(var(--gray0));
+            --secondary: rgb(var(--gray0));
+            --secondary-foreground: rgb(var(--gray100));
+        }
+
+        .cds-light-led133c {
+            --blue0: 245, 248, 255;
+            --blue5: 211, 225, 255;
+            --blue10: 176, 202, 255;
+            --blue15: 146, 182, 255;
+            --blue20: 115, 162, 255;
+            --blue30: 70, 132, 255;
+            --blue40: 38, 110, 255;
+            --blue50: 16, 94, 255;
+            --blue60: 0, 82, 255;
+            --blue70: 0, 75, 235;
+            --blue80: 0, 62, 193;
+            --blue90: 0, 41, 130;
+            --blue100: 0, 24, 77;
+            --green0: 245, 255, 251;
+            --green5: 203, 245, 227;
+            --green10: 163, 235, 205;
+            --green15: 131, 224, 186;
+            --green20: 101, 214, 167;
+            --green30: 60, 194, 138;
+            --green40: 34, 173, 115;
+            --green50: 18, 153, 97;
+            --green60: 9, 133, 81;
+            --green70: 4, 112, 67;
+            --green80: 1, 92, 54;
+            --green90: 0, 71, 42;
+            --green100: 0, 51, 30;
+            --orange0: 255, 250, 245;
+            --orange5: 254, 232, 210;
+            --orange10: 253, 213, 176;
+            --orange15: 251, 194, 147;
+            --orange20: 249, 174, 118;
+            --orange30: 244, 140, 76;
+            --orange40: 237, 112, 47;
+            --orange50: 225, 89, 27;
+            --orange60: 207, 71, 14;
+            --orange70: 181, 54, 6;
+            --orange80: 145, 39, 2;
+            --orange90: 100, 26, 0;
+            --orange100: 51, 13, 0;
+            --yellow0: 255, 253, 244;
+            --yellow5: 254, 248, 217;
+            --yellow10: 252, 242, 191;
+            --yellow15: 249, 233, 165;
+            --yellow20: 245, 224, 139;
+            --yellow30: 231, 201, 91;
+            --yellow40: 213, 173, 54;
+            --yellow50: 188, 141, 27;
+            --yellow60: 159, 106, 9;
+            --yellow70: 125, 72, 0;
+            --yellow80: 90, 44, 0;
+            --yellow90: 55, 23, 0;
+            --yellow100: 25, 8, 0;
+            --gray0: 255, 255, 255;
+            --gray5: 238, 240, 243;
+            --gray10: 222, 225, 231;
+            --gray15: 206, 210, 219;
+            --gray20: 191, 196, 207;
+            --gray30: 163, 169, 182;
+            --gray40: 137, 144, 158;
+            --gray50: 113, 120, 134;
+            --gray60: 91, 97, 110;
+            --gray70: 70, 75, 85;
+            --gray80: 50, 53, 61;
+            --gray90: 30, 32, 37;
+            --gray100: 10, 11, 13;
+            --indigo0: 246, 247, 255;
+            --indigo5: 230, 232, 255;
+            --indigo10: 214, 218, 254;
+            --indigo15: 198, 204, 253;
+            --indigo20: 181, 189, 253;
+            --indigo30: 148, 161, 251;
+            --indigo40: 116, 135, 247;
+            --indigo50: 89, 111, 242;
+            --indigo60: 66, 91, 233;
+            --indigo70: 47, 74, 215;
+            --indigo80: 31, 54, 173;
+            --indigo90: 17, 32, 107;
+            --indigo100: 8, 15, 51;
+            --pink0: 255, 245, 255;
+            --pink5: 253, 228, 253;
+            --pink10: 251, 212, 250;
+            --pink15: 248, 195, 245;
+            --pink20: 244, 178, 240;
+            --pink30: 235, 143, 227;
+            --pink40: 221, 110, 209;
+            --pink50: 203, 81, 187;
+            --pink60: 179, 58, 162;
+            --pink70: 149, 39, 133;
+            --pink80: 116, 26, 102;
+            --pink90: 83, 17, 72;
+            --pink100: 51, 10, 44;
+            --purple0: 251, 247, 255;
+            --purple5: 244, 233, 255;
+            --purple10: 235, 219, 254;
+            --purple15: 227, 204, 253;
+            --purple20: 217, 189, 253;
+            --purple30: 197, 160, 251;
+            --purple40: 177, 132, 247;
+            --purple50: 157, 107, 242;
+            --purple60: 138, 85, 233;
+            --purple70: 119, 67, 215;
+            --purple80: 90, 48, 173;
+            --purple90: 54, 27, 107;
+            --purple100: 25, 13, 51;
+            --red0: 255, 245, 246;
+            --red5: 254, 225, 228;
+            --red10: 253, 206, 210;
+            --red15: 251, 186, 191;
+            --red20: 249, 166, 173;
+            --red30: 244, 127, 136;
+            --red40: 237, 89, 102;
+            --red50: 225, 57, 71;
+            --red60: 207, 32, 47;
+            --red70: 181, 15, 29;
+            --red80: 145, 5, 16;
+            --red90: 100, 1, 9;
+            --red100: 51, 0, 4;
+        }
+
+        .cds-large-l12sl86x {
+            --display1-font-size: 64px;
+            --display1-line-height: 72px;
+            --display1-letter-spacing: 0.004em;
+            --display1-font-weight: 400;
+            --display2-font-size: 34px;
+            --display2-line-height: 44px;
+            --display2-letter-spacing: 0.013em;
+            --display2-font-weight: 400;
+            --title1-font-size: 28px;
+            --title1-line-height: 36px;
+            --title1-letter-spacing: 0.01em;
+            --title1-font-weight: 500;
+            --title2-font-size: 28px;
+            --title2-line-height: 36px;
+            --title2-letter-spacing: 0.01em;
+            --title2-font-weight: 400;
+            --title3-font-size: 20px;
+            --title3-line-height: 28px;
+            --title3-letter-spacing: -0.018em;
+            --title3-font-weight: 500;
+            --headline-font-size: 16px;
+            --headline-line-height: 24px;
+            --headline-letter-spacing: -0.021em;
+            --headline-font-weight: 600;
+            --body-font-size: 16px;
+            --body-line-height: 24px;
+            --body-letter-spacing: -0.021em;
+            --body-font-weight: 400;
+            --label1-font-size: 14px;
+            --label1-line-height: 16px;
+            --label1-letter-spacing: -0.011em;
+            --label1-font-weight: 600;
+            --label2-font-size: 14px;
+            --label2-line-height: 16px;
+            --label2-letter-spacing: -0.011em;
+            --label2-font-weight: 400;
+            --caption-font-size: 13px;
+            --caption-line-height: 16px;
+            --caption-letter-spacing: -0.006em;
+            --caption-text-transform: uppercase;
+            --caption-font-weight: 600;
+            --legal-font-size: 13px;
+            --legal-line-height: 16px;
+            --legal-letter-spacing: -0.006em;
+            --legal-font-weight: 400;
+
+            --spacing-1: 8px;
+            --spacing-2: 16px;
+            --spacing-3: 24px;
+            --spacing-4: 32px;
+            --spacing-5: 40px;
+            --spacing-6: 48px;
+            --spacing-7: 56px;
+            --spacing-8: 64px;
+            --spacing-9: 72px;
+            --spacing-10: 80px;
+            --checkbox-size: 20px;
+            --radio-size: 20px;
+            --switch-width: 52px;
+            --switch-height: 32px;
+            --switch-thumb-size: 30px;
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Graphik, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        Style Attribute {
+            --full-view-height: 792px;
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            line-height: 1.15;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        *, ::after, ::before {
+            box-sizing: border-box;
+            border-style: solid;
+            border-width: 0;
+        }
+
+        .svgGraphs {
+            display: block;
+            fill: red;
+            stroke: blue;
+        }
+
+
+    </style>
+
 </head>
 <body>
 
 <div id="message">
-  <h2>Welcome</h2>
-  <h1>Firebase Hosting Setup Complete</h1>
-  <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-  <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
+    <h2>Welcome</h2>
+    <h1>Firebase Hosting Setup Complete</h1>
+    <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something
+        extraordinary!</p>
+    <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
 </div>
 <p id="load">Firebase SDK Loading&hellip;</p>
 <a href="https://static.coinpaper.io/api/coins.json" class="button">THIS IS THE API CAN GET JSON OF 100 CRYPTALCOINS</a>
 <br>
-<a href="https://static.coinpaper.io/api/coins/btc-bitcoin.json" class="button">THIS IS THE API CAN GET JSON OF BITCOIN</a>
+<a href="https://static.coinpaper.io/api/coins/btc-bitcoin.json" class="button">THIS IS THE API CAN GET JSON OF
+    BITCOIN</a>
 <!-- The surrounding HTML is left untouched by FirebaseUI.
      Your app may use that space for branding, controls and other customizations.-->
-<h1>Welcome to My Awesome App</h1>
+<h1>Welcome to our first web page</h1>
 <div id="firebaseui-auth-container"></div>
 <div id="loader">Loading...</div>
 
 <script>
 
 
+    document.addEventListener('DOMContentLoaded', function () {
+        const loadEl = document.querySelector('#load');
+        // Firebase App (the core Firebase SDK) is always required and must be listed first
+        //import firebase from "firebase/app";
+        // var firebase = require('firebase');
+        // var firebaseui = require('firebaseui');
+        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+        // // The Firebase SDK is initialized and available here!
+        //
+//         设置身份验证状态观察者并获取用户数据
+//         针对应用中需要已登录用户的信息的每个页面，将观察者附加到全局身份验证对象。每当用户的登录状态发生变化时，系统都会调用此观察者。
+//
+// 请使用 onAuthStateChanged 方法附加观察者。当用户成功登录时，您可以从观察者中获取用户的相关信息。
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                // User is signed in, see docs for a list of available properties
+                // https://firebase.google.com/docs/reference/js/firebase.User
+                name = user.displayName;
+                email = user.email;
+                photoUrl = user.photoURL;
+                emailVerified = user.emailVerified;
+                uid = user.uid;  // The user's ID, unique to the Firebase project. Do NOT use
+                                 // this value to authenticate with your backend server, if
+                                 // you have one. Use User.getToken() instead.
+                user.providerData.forEach(function (profile) {
+                    console.log("Sign-in provider: " + profile.providerId);
+                    console.log("  Provider-specific UID: " + profile.uid);
+                    console.log("  Name: " + profile.displayName);
+                    console.log("  Email: " + profile.email);
+                    console.log("  Photo URL: " + profile.photoURL);
+                });
+                console.info("detected signedin user with UID:%s",uid);
 
-  document.addEventListener('DOMContentLoaded', function() {
-    const loadEl = document.querySelector('#load');
-    // Firebase App (the core Firebase SDK) is always required and must be listed first
-    //import firebase from "firebase/app";
-    // var firebase = require('firebase');
-    // var firebaseui = require('firebaseui');
-    // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-    // // The Firebase SDK is initialized and available here!
-    //
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        var uid = user.uid;
-        // ...
-      } else {
-        // User is signed out
-        // ...
-        console.info("User haven't logged in");
-      }
+
+
+                // ...
+            } else {
+                // User is signed out
+                // ...
+                console.info("User haven't logged in");
+            }
+        });
+        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
+        // firebase.firestore().doc('/foo/bar').get().then(() => { });
+        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
+        // firebase.messaging().requestPermission().then(() => { });
+        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
+        // firebase.analytics(); // call to activate
+        // firebase.analytics().logEvent('tutorial_completed');
+        // firebase.performance(); // call to activate
+        //
+        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+
+        try {
+
+
+            let app = firebase.app();
+            let features = [
+                'auth',
+                'database',
+                'firestore',
+                'messaging',
+                'storage',
+                'analytics',
+                'remoteConfig',
+                'performance',
+            ].filter(feature => typeof app[feature] === 'function');
+            loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
+// Temp variable to hold the anonymous user data if needed.
+            var data = null;
+// Hold a reference to the anonymous current user.
+            var anonymousUser = firebase.auth().currentUser;
+            // Initialize the FirebaseUI Widget using Firebase.
+            var ui = new firebaseui.auth.AuthUI(firebase.auth());
+            ui.start('#firebaseui-auth-container', {
+                // Whether to upgrade anonymous users should be explicitly provided.
+                // The user must already be signed in anonymously before FirebaseUI is
+                // rendered.
+                autoUpgradeAnonymousUsers: true,
+                signInSuccessUrl: '/prices.html',
+                signInOptions: [
+                    // List of OAuth providers supported.
+                    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+                    {
+                        provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,//password/email login
+                        signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD//email link login
+                    }
+                ],callbacks: {
+                    // signInFailure callback must be provided to handle merge conflicts which
+                    // occur when an existing credential is linked to an anonymous user.
+                    signInFailure: function(error) {
+                        // For merge conflicts, the error.code will be
+                        // 'firebaseui/anonymous-upgrade-merge-conflict'.
+                        if (error.code != 'firebaseui/anonymous-upgrade-merge-conflict') {
+                            return Promise.resolve();
+                        }
+                        // The credential the user tried to sign in with.
+                        var cred = error.credential;
+                        // Copy data from anonymous user to permanent user and delete anonymous
+                        // user.
+                        // ...
+                        // Finish sign-in after data is copied.
+                        return firebase.auth().signInWithCredential(cred);
+                    }
+                }
+                // Other config options...
+            });
+            // Is there an email link sign-in?
+            if (ui.isPendingRedirect()) {
+                ui.start('#firebaseui-auth-container', uiConfig);
+            }
+            // This can also be done via:
+            if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
+                ui.start('#firebaseui-auth-container', uiConfig);
+            }
+            var uiConfig = {
+                callbacks: {
+                    signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+                        // User successfully signed in.
+                        // Return type determines whether we continue the redirect automatically
+                        // or whether we leave that to developer to handle.
+                        return true;
+                    },
+                    uiShown: function () {
+                        // The widget is rendered.
+                        // Hide the loader.
+                        document.getElementById('loader').style.display = 'none';
+                    }
+                },
+                // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+                signInFlow: 'popup',
+                signInSuccessUrl: '/prices.html',
+                signInOptions: [
+                    // Leave the lines as is for the providers you want to offer your users.
+                    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+                    firebase.auth.EmailAuthProvider.PROVIDER_ID
+                ],
+                // Terms of service url.
+                tosUrl: 'https://www.termsfeed.com/live/26d0bf4a-6aa9-4596-8728-a017513b1001',
+                // Privacy policy url.
+                privacyPolicyUrl: 'https://www.freeprivacypolicy.com/live/e63aa8ee-5ece-4cc4-922e-5a2e43d62b36'
+            };
+            // The start method will wait until the DOM is loaded.
+            ui.start('#firebaseui-auth-container', uiConfig);
+
+//注册新用户
+            // 创建一个表单，允许新用户使用自己的电子邮件地址和密码注册您的应用。当用户填好该表单后，验证用户提供的电子邮件地址和密码，然后将其传递给 createUserWithEmailAndPassword 方法：
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Signed in
+                    var user = userCredential.user;
+                    // ...
+
+                    var actionCodeSettings = {
+                        // URL you want to redirect back to. The domain (www.example.com) for this
+                        // URL must be in the authorized domains list in the Firebase Console.
+                        url: 'douglasproject.web.app',
+                        // This must be true.
+                        handleCodeInApp: true,
+                        iOS: {
+                            bundleId: 'com.example.ios'
+                        },
+                        android: {
+                            packageName: 'com.example.android',
+                            installApp: true,
+                            minimumVersion: '12'
+                        },
+                        dynamicLinkDomain: 'douglasproject.web.app'
+                    };
+                })
+                .catch((error) => {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    // ..
+                });
+//现有用户登录
+//     创建一个表单，允许现有用户使用自己的电子邮件地址和密码登录。当用户填好该表单后，调用 signInWithEmailAndPassword 方法：
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Signed in
+                    var user = userCredential.user;
+                    // ...
+
+                })
+                .catch((error) => {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                });
+
+//如需将用户退出登录，请调用 signOut：
+            firebase.auth().signOut().then(() => {
+                // Sign-out successful.
+            }).catch((error) => {
+                // An error happened.
+            });
+
+
+
+
+
+        } catch (e) {
+            console.error(e);
+            loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
+        }
     });
-    // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-    // firebase.firestore().doc('/foo/bar').get().then(() => { });
-    // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-    // firebase.messaging().requestPermission().then(() => { });
-    // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-    // firebase.analytics(); // call to activate
-    // firebase.analytics().logEvent('tutorial_completed');
-    // firebase.performance(); // call to activate
-    //
-    // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-
-    try {
-      let app = firebase.app();
-      let features = [
-        'auth',
-        'database',
-        'firestore',
-        'messaging',
-        'storage',
-        'analytics',
-        'remoteConfig',
-        'performance',
-      ].filter(feature => typeof app[feature] === 'function');
-      loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-
-      // Initialize the FirebaseUI Widget using Firebase.
-      var ui = new firebaseui.auth.AuthUI(firebase.auth());
-      ui.start('#firebaseui-auth-container', {
-        signInOptions: [
-          // List of OAuth providers supported.
-          firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-          {
-            provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,//password/email login
-            signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD//email link login
-          }
-        ],
-        // Other config options...
-      });
-      // Is there an email link sign-in?
-      if (ui.isPendingRedirect()) {
-        ui.start('#firebaseui-auth-container', uiConfig);
-      }
-      // This can also be done via:
-      if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
-        ui.start('#firebaseui-auth-container', uiConfig);
-      }
-      var uiConfig = {
-        callbacks: {
-          signInSuccessWithAuthResult: function(authResult, redirectUrl) {
-            // User successfully signed in.
-            // Return type determines whether we continue the redirect automatically
-            // or whether we leave that to developer to handle.
-            return true;
-          },
-          uiShown: function() {
-            // The widget is rendered.
-            // Hide the loader.
-            document.getElementById('loader').style.display = 'none';
-          }
-        },
-        // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
-        signInFlow: 'popup',
-        signInSuccessUrl: '<url-to-redirect-to-on-success>',
-        signInOptions: [
-          // Leave the lines as is for the providers you want to offer your users.
-          firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-          firebase.auth.EmailAuthProvider.PROVIDER_ID
-        ],
-        // Terms of service url.
-        tosUrl: '<your-tos-url>',
-        // Privacy policy url.
-        privacyPolicyUrl: '<your-privacy-policy-url>'
-      };
-      // The start method will wait until the DOM is loaded.
-      ui.start('#firebaseui-auth-container', uiConfig);
-    } catch (e) {
-      console.error(e);
-      loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-    }
-  });
-
-
-
 </script>
 
 
