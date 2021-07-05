@@ -644,10 +644,17 @@
 //         针对应用中需要已登录用户的信息的每个页面，将观察者附加到全局身份验证对象。每当用户的登录状态发生变化时，系统都会调用此观察者。
 //
 // 请使用 onAuthStateChanged 方法附加观察者。当用户成功登录时，您可以从观察者中获取用户的相关信息。
+        var User;
+        var name;
+        var email;
+        var photoUrl;
+        var emailVerified;
+        var uid;
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 // User is signed in, see docs for a list of available properties
                 // https://firebase.google.com/docs/reference/js/firebase.User
+                User = user;
                 name = user.displayName;
                 email = user.email;
                 photoUrl = user.photoURL;
@@ -778,47 +785,47 @@
 
 //注册新用户
             // 创建一个表单，允许新用户使用自己的电子邮件地址和密码注册您的应用。当用户填好该表单后，验证用户提供的电子邮件地址和密码，然后将其传递给 createUserWithEmailAndPassword 方法：
-            firebase.auth().createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // Signed in
-                    var user = userCredential.user;
-                    // ...
-
-                    var actionCodeSettings = {
-                        // URL you want to redirect back to. The domain (www.example.com) for this
-                        // URL must be in the authorized domains list in the Firebase Console.
-                        url: 'douglasproject.web.app',
-                        // This must be true.
-                        handleCodeInApp: true,
-                        iOS: {
-                            bundleId: 'com.example.ios'
-                        },
-                        android: {
-                            packageName: 'com.example.android',
-                            installApp: true,
-                            minimumVersion: '12'
-                        },
-                        dynamicLinkDomain: 'douglasproject.web.app'
-                    };
-                })
-                .catch((error) => {
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                    // ..
-                });
+            // firebase.auth().createUserWithEmailAndPassword(email, password)
+            //     .then((userCredential) => {
+            //         // Signed in
+            //         var user = userCredential.user;
+            //         // ...
+            //
+            //         var actionCodeSettings = {
+            //             // URL you want to redirect back to. The domain (www.example.com) for this
+            //             // URL must be in the authorized domains list in the Firebase Console.
+            //             url: 'douglasproject.web.app',
+            //             // This must be true.
+            //             handleCodeInApp: true,
+            //             iOS: {
+            //                 bundleId: 'com.example.ios'
+            //             },
+            //             android: {
+            //                 packageName: 'com.example.android',
+            //                 installApp: true,
+            //                 minimumVersion: '12'
+            //             },
+            //             dynamicLinkDomain: 'douglasproject.web.app'
+            //         };
+            //     })
+            //     .catch((error) => {
+            //         var errorCode = error.code;
+            //         var errorMessage = error.message;
+            //         // ..
+            //     });
 //现有用户登录
 //     创建一个表单，允许现有用户使用自己的电子邮件地址和密码登录。当用户填好该表单后，调用 signInWithEmailAndPassword 方法：
-            firebase.auth().signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // Signed in
-                    var user = userCredential.user;
-                    // ...
-
-                })
-                .catch((error) => {
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                });
+//             firebase.auth().signInWithEmailAndPassword(email, password)
+//                 .then((userCredential) => {
+//                     // Signed in
+//                     var user = userCredential.user;
+//                     // ...
+//
+//                 })
+//                 .catch((error) => {
+//                     var errorCode = error.code;
+//                     var errorMessage = error.message;
+//                 });
 
 //如需将用户退出登录，请调用 signOut：
             firebase.auth().signOut().then(() => {
