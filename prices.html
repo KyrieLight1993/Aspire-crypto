@@ -609,250 +609,8 @@
 
 </head>
 <body>
-
-
-<p id="load">Firebase SDK Loading&hellip;</p>
-<a href="https://static.coinpaper.io/api/coins.json" class="button">THIS IS THE API CAN GET JSON OF 100 CRYPTALCOINS</a>
-<br>
-<a href="https://static.coinpaper.io/api/coins/btc-bitcoin.json" class="button">THIS IS THE API CAN GET JSON OF
-    BITCOIN</a>
-<!-- The surrounding HTML is left untouched by FirebaseUI.
-     Your app may use that space for branding, controls and other customizations.-->
-<h1>Welcome to our first web page</h1>
 <div id="firebaseui-auth-container"></div>
 
-
-<script>
-
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const loadEl = document.querySelector('#load');
-        // Firebase App (the core Firebase SDK) is always required and must be listed first
-        //import firebase from "firebase/app";
-        // var firebase = require('firebase');
-        // var firebaseui = require('firebaseui');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-
-
-        ////////////////////////////////
-        //       Firebase Auth        //
-        ////////////////////////////////
-//         设置身份验证状态观察者并获取用户数据
-//         针对应用中需要已登录用户的信息的每个页面，将观察者附加到全局身份验证对象。每当用户的登录状态发生变化时，系统都会调用此观察者。
-//
-// 请使用 onAuthStateChanged 方法附加观察者。当用户成功登录时，您可以从观察者中获取用户的相关信息。
-        firebase.auth().onAuthStateChanged(user => {
-            if (user) {
-                // User is signed in, see docs for a list of available properties
-                // https://firebase.google.com/docs/reference/js/firebase.User
-                name = user.displayName;
-                email = user.email;
-                photoUrl = user.photoURL;
-                emailVerified = user.emailVerified;
-                uid = user.uid;  // The user's ID, unique to the Firebase project. Do NOT use
-                                 // this value to authenticate with your backend server, if
-                                 // you have one. Use User.getToken() instead.
-                user.providerData.forEach(function (profile) {
-                    console.log("Sign-in provider: " + profile.providerId);
-                    console.log("  Provider-specific UID: " + profile.uid);
-                    console.log("  Name: " + profile.displayName);
-                    console.log("  Email: " + profile.email);
-                    console.log("  Photo URL: " + profile.photoURL);
-                });
-                console.info("detected signedin user with UID:%s",uid);
-
-
-
-                // ...
-            } else {
-                // User is signed out
-                // ...
-                console.info("User haven't logged in");
-                // Initialize the FirebaseUI Widget using Firebase.
-                var ui = new firebaseui.auth.AuthUI(firebase.auth());
-                ui.start('#firebaseui-auth-container', {
-                    // Whether to upgrade anonymous users should be explicitly provided.
-                    // The user must already be signed in anonymously before FirebaseUI is
-                    // rendered.
-                    autoUpgradeAnonymousUsers: true,
-                    signInSuccessUrl: '/prices.html',
-                    signInOptions: [
-                        // List of OAuth providers supported.
-                        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-                        {
-                            provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,//password/email login
-                            signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD//email link login
-                        }
-                    ],callbacks: {
-                        // signInFailure callback must be provided to handle merge conflicts which
-                        // occur when an existing credential is linked to an anonymous user.
-                        signInFailure: function(error) {
-                            // For merge conflicts, the error.code will be
-                            // 'firebaseui/anonymous-upgrade-merge-conflict'.
-                            if (error.code != 'firebaseui/anonymous-upgrade-merge-conflict') {
-                                return Promise.resolve();
-                            }
-                            // The credential the user tried to sign in with.
-                            var cred = error.credential;
-                            // Copy data from anonymous user to permanent user and delete anonymous
-                            // user.
-                            // ...
-                            // Finish sign-in after data is copied.
-                            return firebase.auth().signInWithCredential(cred);
-                        }
-                    }
-                    // Other config options...
-                });
-                // Is there an email link sign-in?
-                if (ui.isPendingRedirect()) {
-                    ui.start('#firebaseui-auth-container', uiConfig);
-                }
-                // This can also be done via:
-                if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
-                    ui.start('#firebaseui-auth-container', uiConfig);
-                }
-                var uiConfig = {
-                    callbacks: {
-                        signInSuccessWithAuthResult: function (authResult, redirectUrl) {
-                            // User successfully signed in.
-                            // Return type determines whether we continue the redirect automatically
-                            // or whether we leave that to developer to handle.
-                            return true;
-                        },
-                        uiShown: function () {
-                            // The widget is rendered.
-                            // Hide the loader.
-                            document.getElementById('loader').style.display = 'none';
-                        }
-                    },
-                    // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
-                    signInFlow: 'popup',
-                    signInSuccessUrl: '/prices.html',
-                    signInOptions: [
-                        // Leave the lines as is for the providers you want to offer your users.
-                        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-                        firebase.auth.EmailAuthProvider.PROVIDER_ID
-                    ],
-                    // Terms of service url.
-                    tosUrl: 'https://www.termsfeed.com/live/26d0bf4a-6aa9-4596-8728-a017513b1001',
-                    // Privacy policy url.
-                    privacyPolicyUrl: 'https://www.freeprivacypolicy.com/live/e63aa8ee-5ece-4cc4-922e-5a2e43d62b36'
-                };
-                // The start method will wait until the DOM is loaded.
-                ui.start('#firebaseui-auth-container', uiConfig);
-            }
-        });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        ///////////////////////////////////
-        //      Firestore Dtabase        //
-        ///////////////////////////////////
-        var db =firebase.firestore();//fireStore database handler
-        // // add date
-        // db.collection("usersData").add({
-        //     first: "Ada",
-        //     last: "Lovelace",
-        //     born: 1815
-        // })
-        //     .then((docRef) => {
-        //         console.log("Document written with ID: ", docRef.id);
-        //     })
-        //     .catch((error) => {
-        //         console.error("Error adding document: ", error);
-        //     });
-        // db.collection('users').doc(user_id).set({foo:'bar'}, {merge: true});
-
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-
-        try {
-
-
-            let app = firebase.app();
-            let features = [
-                'auth',
-                'database',
-                'firestore',
-                'messaging',
-                'storage',
-                'analytics',
-                'remoteConfig',
-                'performance',
-            ].filter(feature => typeof app[feature] === 'function');
-            loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-// Temp variable to hold the anonymous user data if needed.
-            var data = null;
-// Hold a reference to the anonymous current user.
-            var anonymousUser = firebase.auth().currentUser;
-
-
-//注册新用户
-            // 创建一个表单，允许新用户使用自己的电子邮件地址和密码注册您的应用。当用户填好该表单后，验证用户提供的电子邮件地址和密码，然后将其传递给 createUserWithEmailAndPassword 方法：
-            firebase.auth().createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // Signed in
-                    var user = userCredential.user;
-                    // ...
-
-                    var actionCodeSettings = {
-                        // URL you want to redirect back to. The domain (www.example.com) for this
-                        // URL must be in the authorized domains list in the Firebase Console.
-                        url: 'douglasproject.web.app',
-                        // This must be true.
-                        handleCodeInApp: true,
-                        iOS: {
-                            bundleId: 'com.example.ios'
-                        },
-                        android: {
-                            packageName: 'com.example.android',
-                            installApp: true,
-                            minimumVersion: '12'
-                        },
-                        dynamicLinkDomain: 'douglasproject.web.app'
-                    };
-                })
-                .catch((error) => {
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                    // ..
-                });
-//现有用户登录
-//     创建一个表单，允许现有用户使用自己的电子邮件地址和密码登录。当用户填好该表单后，调用 signInWithEmailAndPassword 方法：
-            firebase.auth().signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // Signed in
-                    var user = userCredential.user;
-                    // ...
-
-                })
-                .catch((error) => {
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                });
-
-//如需将用户退出登录，请调用 signOut：
-            firebase.auth().signOut().then(() => {
-                // Sign-out successful.
-            }).catch((error) => {
-                // An error happened.
-            });
-
-
-
-
-
-        } catch (e) {
-            console.error(e);
-            loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
-    });
-</script>
 
 <main id="main" class="Prices__Main-sc-1cesgyc-3 priceTable">
 
@@ -892,7 +650,7 @@
         </ul>
     </nav>
     <div headers="" title="" class="AssetTable__TableWrap-sc-1hzgxt1-2 priceTableContinor">
-        <table class="AssetTable__Table-sc-1hzgxt1-1 coinsTable">
+        <table class="AssetTable__Table coinsTable">
             <thead class="AssetTableHelpers__Head-sc-1o9oxiy-0 leve2SortingBar">
             <tr class="AssetTableHelpers__Row-sc-1o9oxiy-7 bOnkOC">
                 <th class="AssetTableHelpers__Th-sc-1o9oxiy-4 nameSortingBtn">
@@ -943,12 +701,12 @@
                 </th>
             </tr>
             </thead>
-            <tbody class="AssetTable__AssetTableBody-sc-1hzgxt1-0 gcVqXC">
-            <tr data-element-handle="asset-table-row" class="AssetTableRowDense__Row-sc-14h1499-1 tableRows">
-                <td class="AssetTableRowDense__Column-sc-14h1499-2 AssetTableRowDense__NameColumn-sc-14h1499-3 rowNameContents">
+            <tbody class="AssetTable__AssetTableBody-sc-1hzgxt1-0 gcVqXC" id="MainTBody">
+            <tr data-element-handle="asset-table-row" class="tableRows">
+                <td class="rowNameContents">
                     <a
                             to="/price/bitcoin"
-                            class="Link__A-eh4rrz-0 hfBqui Flex-l69ttv-0 AssetTableRowDense__NameColumnInner-sc-14h1499-11 pictureAndName"
+                            class="pictureAndName"
                             color="slate" href="/price/bitcoin">
                         <picture>
                             <source srcset="https://dynamic-assets.coinbase.com/e785e0181f1a23a30d9476038d9be91e9f6c63959b538eabbc51a1abc8898940383291eede695c3b8dfaa1829a9b57f5a2d0a16b0523580346c6b8fab67af14b/asset_icons/b57ac673f06a4b0338a596817eb0a50ce16e2059f327dc117744449a47915cb2.png"
@@ -971,7 +729,7 @@
                 <td class="AssetTableRowDense__Column-sc-14h1499-2 AssetTableRowDense__PercentChangeColumn-sc-14h1499-5 dLDmCz">
                     <h4 class="TextElement__Spacer-hxkcw5-0 cicsNy Header__StyledHeader-sc-1xiyexz-0 allPriceChangeRiseTexts AssetTableRowDense__StyledHeader-sc-14h1499-14 AssetTableRowDense__TabularNumeric-sc-14h1499-18 AssetTableRowDense__PercentChangeText-sc-14h1499-19 priceChangeContents asset-table-percent-change">
                         +2.02%</h4></td>
-                <td class="AssetTableRowDense__Column-sc-14h1499-2 AssetTableRowDense__ChartColumn-sc-14h1499-6 priceChartLineGraph">
+                <td class=" priceChartLineGraph">
                     <svg viewBox="0 0 100 32" version="1.1" xmlns="http://www.w3.org/2000/svg"
                          preserveAspectRatio="none"
                          class="SparkLine__Svg-sc-9wg5ja-0 svgGraphs">
@@ -996,7 +754,7 @@
                             data-synthetic-id="asset_list_trade_button">Trade</span></span></button>
                 </td>
             </tr>
-            <tr data-element-handle="asset-table-row" class="AssetTableRowDense__Row-sc-14h1499-1 tableRows">
+            <tr data-element-handle="asset-table-row" class="tableRows">
                 <td class="AssetTableRowDense__Column-sc-14h1499-2 AssetTableRowDense__NameColumn-sc-14h1499-3 rowNameContents">
                     <a
                             to="/price/ethereum"
@@ -1048,7 +806,7 @@
                             data-synthetic-id="asset_list_trade_button">Trade</span></span></button>
                 </td>
             </tr>
-            <tr data-element-handle="asset-table-row" class="AssetTableRowDense__Row-sc-14h1499-1 tableRows">
+            <tr data-element-handle="asset-table-row" class="tableRows">
                 <td class="AssetTableRowDense__Column-sc-14h1499-2 AssetTableRowDense__NameColumn-sc-14h1499-3 rowNameContents">
                     <a
                             to="/price/ethereum-2"
@@ -1171,7 +929,7 @@
                         CA$503.09</h4></div>
                 </td>
                 <td class="AssetTableRowDense__Column-sc-14h1499-2 AssetTableRowDense__PercentChangeColumn-sc-14h1499-5 dLDmCz">
-                    <h4 class="TextElement__Spacer-hxkcw5-0 cicsNy Header__StyledHeader-sc-1xiyexz-0 allPriceChangeFallTexts AssetTableRowDense__StyledHeader-sc-14h1499-14 AssetTableRowDense__TabularNumeric-sc-14h1499-18 AssetTableRowDense__PercentChangeText-sc-14h1499-19 priceChangeContents asset-table-percent-change">
+                    <h4 class="   allPriceChangeFallTexts   priceChangeContents ">
                         +1.68%</h4></td>
                 <td class="AssetTableRowDense__Column-sc-14h1499-2 AssetTableRowDense__ChartColumn-sc-14h1499-6 priceChartLineGraph">
                     <svg viewBox="0 0 100 32" version="1.1" xmlns="http://www.w3.org/2000/svg"
@@ -1226,6 +984,456 @@
         <span color="light" class="Text__Font-sc-163p65w-0 allAesstsBotIndexBarText PaginationBar__Results-sc-1dqgh2r-6 allAesstsBotIndexBar">1-30 of 5,250 assets</span>
     </div>
 </main>
+
+<!--GET JSON-->
+<script>
+    /**
+     * The information you find in under "ticker_price_24h" for each coin gives you the coins price in USD over the last 24 hours, with one price every 20 minutes. The last_udpate field in each coin shows when the coins information were refreshed, the timezone for the update field is US Ohio.
+     */
+    var AllCoinsData;//all the coins Data as JSON, from API, if API no working get local data
+
+    // function loadJsonWithURL(url){
+    //     var request = new XMLHttpRequest();
+    //     request.open("get", url,true);/*设置请求方法与路径*/
+    //     request.send(null);/*不发送数据到服务器*/
+    //     request.onload = function () {
+    //         if (request.status == 200 && request.readyState == 4 ) {
+    //             return JSON.parse(request.responseText);
+    //         }
+    //     }
+    // }
+
+    var readLocal = function loadJsonWithURL(url){
+        return new Promise(function(resolve, reject) {
+            var request = new XMLHttpRequest();
+            url = "JSON/coins.json";
+            request.onload = function() {
+                if (request.status >= 200 && request.status < 300) {
+                    resolve(AllCoinsData =JSON.parse(request.response));
+                    console.log("got one JSON");
+                } else {
+                    reject(request.statusText);
+                }
+            };
+            request.onerror = function() { reject(request.statusText) }
+            request.open('get', url,true);
+            //request.responseType = 'json';
+            request.send(null);
+        })
+    }
+    var readAPI = function loadJsonWithURL(url){
+        return new Promise(function(resolve, reject) {
+            var request = new XMLHttpRequest();
+            url = "https://static.coinpaper.io/api/coins.json";
+            request.onload = function() {
+                if (request.status >= 200 && request.status < 300) {
+                    resolve(AllCoinsData =JSON.parse(request.response));
+                    console.log("got one JSON");
+                } else {
+                    reject(request.statusText);
+                }
+            };
+            request.onerror = function() { reject(request.statusText) }
+            request.open('get', url,true);
+            //request.responseType = 'json';
+            request.send(null);
+        })
+    }
+    //layout with data
+    async function layoutCoinsTable(){
+        await readLocal();
+        await readAPI();
+        console.log("layouting");
+        if (AllCoinsData !=null){
+            var tbody = document.getElementById('MainTBody');
+            for(var i =0; i<AllCoinsData.length;i++){
+                /////////////////////////////////////////////////////////td1
+                var tr =document.createElement("tr");
+                tr.className ='tableRows';
+                tr.id = AllCoinsData[i].id;
+                var td=document.createElement("td");
+                td.className = "rowNameContents";
+                var a = document.createElement("a");
+                var linkStr = "/price.html?C=" + AllCoinsData[i].id;
+                a.href = linkStr;
+                a.className ="pictureAndName";
+                a.setAttribute("color","slate");
+
+                var picture = document.createElement("picture");
+                var img = document.createElement("img");
+                img.src = AllCoinsData[i].image;
+                img.alt = AllCoinsData[i].symbol + " LOGO";
+                img.loading = "lazy";
+                img.height ="32";
+                img.width="32";
+                picture.appendChild(img);
+                var div = document.createElement("div");
+                div.className = "names";
+                var h4A = document.createElement("h4");
+                h4A.className = "allTableTexts fullName";
+                h4A.innerHTML = AllCoinsData[i].name;
+                var h4B = document.createElement("h4");
+                h4B.className = "shortcutName";
+                h4B.innerHTML = AllCoinsData[i].symbol;
+                div.appendChild(h4A);
+                div.appendChild(h4B);
+
+                a.appendChild(picture);
+                a.appendChild(div);
+                td.appendChild(a);
+
+                ////////////////////////////////////////////////tdB
+                var tdB=document.createElement("td");
+                var divB = document.createElement("div");
+                divB.className="prices";
+                var h4B =document.createElement("h4");
+                h4B.className ="allTableTexts";
+                h4B.innerHTML = "US$" + Math.round((AllCoinsData[i].price + Number.EPSILON) * 100) / 100 ;
+
+                divB.appendChild(h4B);
+                tdB.appendChild(divB);
+
+                ////////////////////////////////////////////////tdC
+                var tdC=document.createElement("td");
+                var h4C =document.createElement("h4");
+                var priceChange = AllCoinsData[i].price_24h_percentage_change;
+                var downOrRiseString = "allPriceChangeFallTexts";
+                if (priceChange>=0){
+                    downOrRiseString ="allPriceChangeRiseTexts";
+                    h4C.innerHTML = "+"+priceChange;
+                }
+                else{
+                    downOrRiseString ="allPriceChangeFallTexts";
+                    h4C.innerHTML = priceChange;
+                }
+                h4C.className = downOrRiseString+" priceChangeContents";
+
+
+                tdC.appendChild(h4C);
+                ////////////////////////////////////////////////tdD
+                var tdD=document.createElement("td");
+                tdD.className="priceChartLineGraph";
+
+                var svg = document.createElement("svg");
+                svg.setAttributeNS(null,"viewBox","0 0 100 32");
+                svg.setAttributeNS(null,"version","1.1");
+                svg.setAttribute("xmlns",`http://www.w3.org/2000/svg`);
+                svg.setAttributeNS(null,"preserveAspectRatio","none");
+                svg.className="SparkLine__Svg-sc-9wg5ja-0 svgGraphs";
+
+
+                var pathData = "M 0,19.57016623192299 C 1.9329013374836656e-19,19.573322899361845 -2.8854979820346494e-17,19.428870375124703 0,19.58594956911727 C 9.618326606782165e-18,19.743028763109834 -0.19999999999999998,20.29642955521663 0,20.355562201885824 C 0.19999999999999998,20.41469484855502 0.8,19.940036025354612 1,19.881612802463245 C 1.2,19.823189579571878 1,19.86651606855296 1,20.063446087428982 C 1,20.260376106305003 0.7999999999999998,20.576983752619032 1,20.86626289684334 C 1.2000000000000002,21.15554204106765 1.8,21.44780380288938 2,21.509841808550533 C 2.2,21.571879814211687 2,21.28652299459579 2,21.17645292514912 C 2,21.066382855702454 1.8,20.990697804573635 2,20.9594914613172 C 2.2,20.928285118060764 2.8,20.97476121640715 3,21.02042120886695 C 3.2,21.06608120132675 3,21.157202806106294 3,21.187791423616197 C 3,21.2183800411261 2.8,21.19675509731487 3,21.173364296416455 C 3.2,21.14997349551804 3.8,21.167991089238022 4,21.070837419124125 C 4.2,20.973683749010227 4,20.547412082553688 4,20.687595945846972 C 4,20.827779809140257 3.8,21.474425818994174 4,21.771756735590554 C 4.2,22.069087652186933 4.8,21.808259896164735 5,22.17425052882887 C 5.2,22.540241161493007 5,23.386938262560484 5,23.60170989891123 C 5,23.81648153526198 4.8,23.339485133774616 5,23.2481087105826 C 5.2,23.156732287390582 5.8,23.10574080942037 6,23.14482778295114 C 6.2,23.183914756481908 6,23.55455957298633 6,23.443543578236437 C 6,23.33252758348654 5.8,22.739750833137762 6,22.58974780920166 C 6.2,22.43974478526556 6.8,22.68744101454258 7,22.693528458555935 C 7.2,22.699615902569292 7,22.58140937650811 7,22.620185029268438 C 7,22.658960682028766 6.8,22.912690249478942 7,22.887406722357575 C 7.2,22.862123195236208 7.8,22.711897845867504 8,22.4937673936616 C 8.2,22.275636941455694 7.8,21.916546647317137 8,21.79675446132805 C 8.2,21.676962275338962 8.8,21.99264923825252 9,21.894806463716165 C 9.2,21.79696368917981 9,21.470825300937637 9,21.307540588646283 C 9,21.14425587635493 8.8,20.98885845379776 9,21.078382902259403 C 9.2,21.167907350721045 9.8,21.563126765082092 10,21.755162830954497 C 10.2,21.9471988968269 10,22.02989921722793 10,22.038563231621428 C 10,22.047227246014927 9.8,21.758993384300634 10,21.798482902921986 C 10.2,21.837972421543338 10.8,22.295409073384985 11,22.23601082472818 C 11.2,22.176612576071374 11,21.746474801956815 11,21.501491659637963 C 11,21.256508517319112 10.8,21.053623335264305 11,21.011095113133926 C 11.2,20.968566891003547 11.8,21.113180848593238 12,21.288850548986076 C 12.2,21.464520249378914 12,21.852507693538293 12,21.889443615098116 C 12,21.92637953665794 11.8,21.571384287425676 12,21.4735301567852 C 12.2,21.37567602614472 12.8,21.193956489200247 13,21.40017296189573 C 13.2,21.606389434591215 13,22.386569910316812 13,22.504612520262615 C 13,22.62265513020842 12.8,21.996869075170007 13,21.990386011624743 C 13.2,21.98390294807948 13.8,22.041913529499183 14,22.472197202536286 C 14.2,22.90248087557339 14,23.816563670331462 14,24.141804376810253 C 14,24.467045083289044 13.8,23.83321511338518 14,24.098400734930244 C 14.2,24.36358635647531 14.8,25.244201344594842 15,25.467732484535578 C 15.2,25.691263624476314 15,25.25307221806398 15,25.216056434633927 C 15,25.179040651203874 14.8,25.366756018169607 15,25.282653567385307 C 15.2,25.198551116601006 15.8,24.96580394445708 16,24.79554418071242 C 16.2,24.62528441696776 15.8,24.459466333055946 16,24.43135474866201 C 16.2,24.403243164268073 16.8,24.693340237807966 17,24.654986258742735 C 17.2,24.616632279677503 17,24.395064794899387 17,24.239584853335856 C 17,24.084104911772325 16.8,24.047331687699664 17,23.877586550925088 C 17.2,23.70784141415051 17.8,23.54774195867007 18,23.390859169462967 C 18.2,23.233976380255864 18,23.20103810780291 18,23.093172604889578 C 18,22.985307101976247 17.8,22.85582667385441 18,22.85153165489632 C 18.2,22.84723663593823 18.8,23.086612650047936 19,23.071697510099135 C 19.2,23.056782370150334 19,22.84193225826267 19,22.77695595515231 C 19,22.71197965204195 18.8,22.735603767100365 19,22.746815994547333 C 19.2,22.7580282219943 19.8,22.730177344171363 20,22.833017092387145 C 20.2,22.935856840602927 20,23.03958703506412 20,23.26101473562625 C 20,23.482442436188382 19.8,24.344323568718117 20,23.940155595197805 C 20.2,23.535987621677492 20.8,21.162734130608484 21,21.240174868024692 C 21.2,21.3176156054409 21,23.620681375226074 21,24.327359282278845 C 21,25.034037189331617 20.8,24.5380743449583 21,24.773564403288546 C 21.2,25.009054461618792 21.8,25.44025962441225 22,25.504809573930082 C 22.2,25.569359523447915 22,25.227533008722915 22,25.096314150877706 C 22,24.965095293032498 21.8,24.679919090347894 22,24.848715284704035 C 22.2,25.017511479060175 22.8,25.67731153985249 23,25.9402951226584 C 23.2,26.203278705464314 23,26.146786900725054 23,26.163633198733603 C 23,26.18047949674215 22.8,25.95436962647904 23,26.024526612701145 C 23.2,26.09468359892325 23.8,26.436836986308062 24,26.51441812984413 C 24.2,26.5919992733802 23.8,26.662338222365946 24,26.41243233038148 C 24.2,26.162526438397016 24.8,25.552072039576153 25,25.2648886699218 C 25.2,24.977705300267445 25,25.026573936367775 25,24.976515482109715 C 25,24.926457027851654 24.8,25.13282175365397 25,25.0145963986315 C 25.2,24.89637104360903 25.8,24.5015764570526 26,24.385388706997368 C 26.2,24.269200956942136 26,24.40168805802102 26,24.433657648355346 C 26,24.465627238689674 25.8,24.413458579428536 26,24.545236658668998 C 26.2,24.67701473790946 26.8,24.807465492963782 27,25.09254804455765 C 27.2,25.377630596151516 27,25.90958191716956 27,25.970649416638324 C 27,26.031716916107086 26.8,25.45998523508846 27,25.397885541901463 C 27.2,25.335785848714465 27.8,25.520162039994915 28,25.660150950703333 C 28.2,25.80013986141175 28,25.912943595177232 28,26.09783009544356 C 28,26.282716595709886 27.8,26.438747372714115 28,26.58458345203497 C 28.2,26.730419531355825 28.8,26.732831146998947 29,26.82701049204784 C 29.2,26.921189837096733 29,27.04481226842379 29,27.055480177279428 C 29,27.066148086135065 28.8,26.955549066976857 29,26.880350036326032 C 29.2,26.805151005675206 29.8,26.800907337315962 30,26.679485024025297 C 30.2,26.55806271073463 30,26.36702348950557 30,26.273238469872705 C 30,26.17945345023984 29.8,25.86520761983552 30,26.210559925860977 C 30.2,26.555912231886435 30.8,28.071034580590677 31,28 C 31.2,27.928965419409323 31,26.323208286600213 31,25.855387022907586 C 31,25.387565759214958 30.8,25.59468967976866 31,25.66089368153686 C 31.2,25.727097683305058 31.8,26.02257942025168 32,26.18640703174858 C 32.2,26.35023464324548 32,26.461643791256737 32,26.480031739021353 C 32,26.49841968678597 31.8,26.438541075240604 32,26.278346770571652 C 32.2,26.1181524659027 32.8,25.751396496649853 33,25.6790602156766 C 33.2,25.606723934703346 32.8,25.988406439695698 33,25.91666536570538 C 33.2,25.844924291715063 33.8,25.36464201256748 34,25.32035484572502 C 34.2,25.276067678882562 34,25.72415298565689 34,25.69522953149309 C 34,25.666306077329292 33.8,25.37555874899054 34,25.175737574906034 C 34.2,24.97591640082153 34.8,24.68768233176637 35,24.696123661070562 C 35.2,24.704564990374752 35,25.239077907960784 35,25.21794422142698 C 35,25.196810534893174 34.8,24.640154770455073 35,24.59045522840154 C 35.2,24.54075568634801 35.8,24.941204224147818 36,24.96944651115932 C 36.2,24.99768879817082 36,25.004200744487285 36,24.731666663459045 C 36,24.459132582430804 35.8,23.84231365754154 36,23.606776106018124 C 36.2,23.37123855449471 36.8,23.597682193113872 37,23.55397890584198 C 37.2,23.510275618570088 37,23.5943823970268 37,23.388259669658655 C 37,23.182136942290512 36.8,22.74193331126707 37,22.52336526900126 C 37.2,22.304797226735452 37.8,22.379615573863344 38,22.295419458329608 C 38.2,22.211223342795872 38,22.224894622238494 38,22.10238469133258 C 38,21.979874760426668 37.8,21.816478453031817 38,21.682869803800045 C 38.2,21.549261154568274 38.8,21.436750027328063 39,21.434341445173718 C 39.2,21.431932863019373 39,21.849781264296357 39,21.670826893028316 C 39,21.491872521760275 38.8,20.738480790234934 39,20.539569588833512 C 39.2,20.34065838743209 39.8,20.55243758464147 40,20.676270886021197 C 40.2,20.800104187400922 40,21.24644648793644 40,21.15873609573215 C 40,21.07102570352786 39.8,20.655042776263908 40,20.237718924999744 C 40.2,19.82039507373558 40.8,19.150312129637424 41,19.072116839411326 C 41.2,18.993921549185227 40.8,20.07190322803623 41,19.84674247386926 C 41.2,19.621581719702288 41.8,18.744630751957782 42,17.94631306857647 C 42.2,17.147995385195156 42,16.249002320501482 42,15.855154056962691 C 42,15.461305793423902 41.8,15.886230431591597 42,15.977071750882521 C 42.2,16.067913070173443 42.8,16.287086161836154 43,16.309360653417308 C 43.2,16.33163514499846 43,15.988944170033426 43,16.088444208788292 C 43,16.18794424754316 42.8,16.755820197602176 43,16.806860847191643 C 43.2,16.85790149678111 43.8,17.0386764359809 44,16.34364745673563 C 44.2,15.648618477490363 44,14.27898661546703 44,13.331715950965297 C 44,12.384445286463563 43.8,11.828903896964313 44,11.607294134226967 C 44.2,11.38568437148962 44.8,12.175641300625148 45,12.223667137278563 C 45.2,12.271692973931977 45,12.081681677591373 45,11.847423317494037 C 45,11.613164957396702 44.8,10.896360137280798 45,11.052375336791885 C 45.2,11.208390536302971 45.8,12.511896508315184 46,12.62749931504947 C 46.2,12.743102121783755 46,11.713385604476727 46,11.63038937046331 C 46,11.547393136449895 45.8,12.041071617693015 46,12.21251814498239 C 46.2,12.383964672271764 46.8,12.655367614952826 47,12.487622006910183 C 47.2,12.319876398867539 47,11.602903238826817 47,11.373790104769169 C 47,11.14467697071152 46.8,11.37439985120043 47,11.342056336621937 C 47.2,11.309712822043444 47.8,11.35368721528709 48,11.212072531876705 C 48.2,11.07045784846632 48,10.88065328840858 48,10.633982919570014 C 48,10.38731255073145 47.8,9.99464881074326 48,9.97872068768388 C 48.2,9.9627925646245 48.8,10.50037301377113 49,10.55434230427311 C 49.2,10.60831159477509 48.8,10.46365772102875 49,10.248567140193781 C 49.2,10.033476559358814 49.8,9.389810236978548 50,9.478889400098268 C 50.2,9.567968563217988 50,10.44597568225772 50,10.69396295579238 C 50,10.94195022932704 49.8,10.392401857376962 50,10.71882576777157 C 50.2,11.045249678166178 50.8,12.107344439954508 51,12.326082507765415 C 51.2,12.544820575576322 51,11.626887476539679 51,11.812516106826106 C 51,11.998144737112533 50.8,13.029354234552006 51,13.254225659197552 C 51.2,13.479097083843097 51.8,13.160566971073356 52,12.936873230053838 C 52.2,12.713179489034319 52,12.30954691094788 52,12.135756954099959 C 52,11.961966997252038 51.8,12.079861793494223 52,12.067923445814232 C 52.2,12.055985098134242 52.8,12.061072570237116 53,12.076065215700005 C 53.2,12.091057861162895 53,12.054070749650963 53,12.14288667312868 C 53,12.231702596606398 52.8,12.498199294634558 53,12.52014483308859 C 53.2,12.542090371542622 53.8,12.38085316883472 54,12.252614365398841 C 54.2,12.124375561962962 54,12.145083823306061 54,11.878950815909196 C 54,11.61281780851233 53.8,11.084182340316916 54,10.921949328414513 C 54.2,10.75971631651211 54.8,11.12809972691621 55,11.067785756397182 C 55.2,11.007471785878154 55,10.865633478185366 55,10.620379475819373 C 55,10.37512547345338 54.8,9.912041976374672 55,9.84151574456722 C 55.2,9.770989512759767 55.8,10.110287745353354 56,10.267748316782114 C 56.2,10.425208888210875 56,10.57329408125311 56,10.628818601711021 C 56,10.684343122168933 55.8,10.476589205954612 56,10.545370919071672 C 56.2,10.614152632188732 56.8,10.800981176555796 57,10.972727167296322 C 57.2,11.144473158036847 57,11.357486612272572 57,11.404100872774297 C 57,11.450715133276022 56.8,11.36510198107675 57,11.205798469804945 C 57.2,11.04649495853314 57.8,10.774905684796233 58,10.607583316415269 C 58.2,10.440260948034306 57.8,10.609566574487404 58,10.369186627900124 C 58.2,10.128806681312843 58.8,9.93157178224755 59,9.40568358347887 C 59.2,8.87979538471019 59,8.051945164122818 59,7.739745634056721 C 59,7.427546103990624 58.8,7.7399050509429435 59,7.844685933148382 C 59.2,7.94946681535382 59.8,8.122744536506552 60,8.263650045083914 C 60.2,8.404555553661275 60,8.405972646895895 60,8.54921347603519 C 60,8.692454305174484 59.8,9.190622105193116 60,8.979854190780383 C 60.2,8.76908627636765 60.8,7.913041460361001 61,7.495373903971522 C 61.2,7.077706347582044 61,6.839655595804529 61,6.89151640883299 C 61,6.943377221861451 60.8,7.501812390330489 61,7.754677969113827 C 61.2,8.007543547897164 61.8,8.21179390859334 62,8.155844302749678 C 62.2,8.099894696906016 62,7.6337994980564305 62,7.474929939895518 C 62,7.316060381734606 61.8,7.6827565738142765 62,7.361496511945115 C 62.2,7.040236450075953 62.8,6.143951355992072 63,5.8686296305497105 C 63.2,5.593307905107349 63,6.206436489240926 63,5.984887884733308 C 63,5.763339280225689 62.8,5.157864184958281 63,4.760886608011619 C 63.2,4.363909031064957 63.8,4.026663221185333 64,4 C 64.2,3.9733367788146667 64,4.4783947898258925 64,4.627570502084953 C 64,4.776746214344013 63.8,4.65971160698401 64,4.7458785612953 C 64.2,4.83204551560659 64.8,4.955472933537951 65,5.058405273641403 C 65.2,5.1613376137448554 65,5.305204349042782 65,5.260540261812561 C 65,5.215876174582339 64.8,4.902847841987046 65,4.835084837490299 C 65.2,4.767321832993551 65.8,4.759229072587178 66,4.921725239328823 C 66.2,5.084221406070467 65.8,5.4633945205700085 66,5.647565671198522 C 66.2,5.831736821827035 66.8,5.191055043091611 67,5.842580992471388 C 67.2,6.4941069418511645 67,8.517146682718352 67,8.905195418097406 C 67,9.293244153476461 66.8,7.827027720525241 67,7.782824669366659 C 67.2,7.738621618208076 67.8,8.347720459208018 68,8.684180162304491 C 68.2,9.020639865400964 68,9.273817783063004 68,9.465123184849023 C 68,9.656428586635043 67.8,9.723857979944135 68,9.640707171234588 C 68.2,9.557556362525041 68.8,9.293322988669932 69,9.049369141301284 C 69.2,8.805415293932636 69,8.361882684000523 69,8.420937934391347 C 69,8.47999318478217 68.8,9.127452975590035 69,9.344645393255403 C 69.2,9.561837810920771 69.8,9.136806111033996 70,9.506900022718188 C 70.2,9.87699393440238 70,10.941747703896535 70,11.195114951676363 C 70,11.44848219945619 69.8,10.484435236312926 70,10.773736261617323 C 70.2,11.06303728692172 70.8,12.523277330112139 71,12.641620078198345 C 71.2,12.759962826284552 71,11.538718058503163 71,11.365450002048359 C 71,11.192181945593555 70.8,11.906852753408998 71,11.775279795924328 C 71.2,11.643706838439659 71.8,10.935428319449846 72,10.70758521462501 C 72.2,10.479742109800172 72,10.6398574973233 72,10.63606427180014 C 72,10.632271046276982 71.8,10.959993426930987 72,10.68861908700921 C 72.2,10.417244747087432 72.8,9.667007567106024 73,9.279192572191256 C 73.2,8.891377577276488 73,8.776998489001633 73,8.749544112435366 C 73,8.7220897358691 72.8,9.370996705938675 73,9.141920689359923 C 73.2,8.912844672781171 73.8,7.846105581545401 74,7.604164029541608 C 74.2,7.362222477537816 73.8,7.998493682764408 74,7.93221292934096 C 74.2,7.865932175917511 74.8,7.721587696487021 75,7.272760262424365 C 75.2,6.823932828361708 75,6.003456202741017 75,5.688075759027676 C 75,5.372695315314335 74.8,5.52861064605341 75,5.695858043857658 C 75.2,5.863105441661906 75.8,5.729229406072296 76,6.524312748048917 C 76.2,7.319396090025538 76,9.133805696428931 76,9.671274753740763 C 76,10.208743811052594 75.8,9.353613939990725 76,9.211658034608078 C 76.2,9.069702129225432 76.8,8.71629706265006 77,8.961495226827534 C 77.2,9.206693391005007 77,9.966429870094297 77,10.437648855495443 C 77,10.908867840896589 76.8,10.742170418730176 77,11.31759015383326 C 77.2,11.893009888936344 77.8,12.81850877368297 78,13.314747531010868 C 78.2,13.810986288338766 78,13.96641398442898 78,13.798783940472749 C 78,13.631153896516517 77.8,12.625965383379443 78,12.47659731122971 C 78.2,12.327229239079978 78.8,13.203330472130613 79,13.051943579724085 C 79.2,12.900556687317557 79,11.989483610627975 79,11.719662849197075 C 79,11.449842087766175 78.8,11.82840297583726 79,11.702839772569588 C 79.2,11.577276569301915 79.8,10.795255621530925 80,11.091846832858712 C 80.2,11.388438044186499 80,12.865308349711322 80,13.185795829208523 C 80,13.506283308705724 79.8,12.688958131200886 80,12.694284230344717 C 80.2,12.699610329488548 80.8,13.291969644905826 81,13.212426324927678 C 81.2,13.13288300494953 81,12.514815934248974 81,12.296567630453978 C 81,12.078319326658983 80.8,12.135313066985582 81,12.121184805952698 C 81.2,12.107056544919814 81.8,12.209138470702602 82,12.22592632528956 C 82.2,12.242714179876518 82,12.413216298369433 82,12.205124078887486 C 82,11.99703185940554 81.8,11.42304692039301 82,11.185465227879826 C 82.2,10.947883535366643 82.8,11.185571701561818 83,11.017215616321572 C 83.2,10.848859531081326 82.8,10.417383875702356 83,10.343684801678592 C 83.2,10.269985727654827 83.8,10.739625917197134 84,10.648720246202753 C 84.2,10.557814575208372 84,9.687861119720349 84,9.889156446706682 C 84,10.090451773693015 83.8,11.384524328941424 84,11.655196881134422 C 84.2,11.92586943332742 84.8,11.196521635652152 85,11.242519207671673 C 85.2,11.288516779691195 85,11.92308398391009 85,11.88518474123203 C 85,11.847285498553969 84.8,11.26591806764879 85,11.053022994281372 C 85.2,10.840127920913954 85.8,10.84400376030794 86,10.820709374394934 C 86.2,10.797414988481927 86,10.76142593896895 86,10.936551064716342 C 86,11.111676190463735 85.8,11.524698169576748 86,11.696335003131898 C 86.2,11.867971836687047 86.8,11.850656878910115 87,11.79473523249209 C 87.2,11.738813586074066 87,11.276158605210973 87,11.416726771041777 C 87,11.55729493687258 86.8,12.398233513712972 87,12.497576061646104 C 87.2,12.596918609579236 87.8,12.302868590338893 88,11.913439510707438 C 88.2,11.524010431075983 88,11.020127616024453 88,10.550430663488832 C 88,10.080733710953211 87.8,9.637960972260249 88,9.564954748029333 C 88.2,9.491948523798417 88.8,10.257234393567478 89,10.185399542334254 C 89.2,10.11356469110103 89,9.530047323318437 89,9.205780491863216 C 89,8.881513660407995 88.8,8.824028096586973 89,8.56406538505815 C 89.2,8.304102673529327 89.8,7.924050820858863 90,7.905966934219102 C 90.2,7.887883047579342 90,8.240227403345376 90,8.473645951859346 C 90,8.707064500373317 89.8,9.058287929058947 90,9.07305967678895 C 90.2,9.087831424518955 90.8,8.714877649182759 91,8.547504690509363 C 91.2,8.380131731835968 90.8,8.302045265896092 91,8.236194883421977 C 91.2,8.170344500947861 91.8,8.148770453299193 92,8.218252778138787 C 92.2,8.287735102978381 92,8.530494872640714 92,8.58360650761995 C 92,8.636718142599184 91.8,8.471997372135702 92,8.483810953034961 C 92.2,8.49562453393422 92.8,8.838312742493398 93,8.642674412116248 C 93.2,8.447036081739098 93,7.741498950634668 93,7.5056193011492125 C 93,7.269739651663757 92.8,7.284938234163028 93,7.463276164688972 C 93.2,7.6416140952149165 93.8,8.219075549406822 94,8.397308953778936 C 94.2,8.575542358151049 94,8.385939274772674 94,8.354443186549535 C 94,8.322947098326395 93.8,8.114738472567193 94,8.239828512663236 C 94.2,8.364918552759278 94.8,8.874339036044635 95,8.979893387029746 C 95.2,9.085447738014857 95,8.736038491704825 95,8.767600267588794 C 95,8.799162043472762 94.8,9.217002667176079 95,9.137702266449589 C 95.2,9.058401865723098 95.8,8.512127322790192 96,8.371098263956346 C 96.2,8.2300692051225 96,8.355944454056237 96,8.432556972280356 C 96,8.509169490504474 95.8,8.511829991251224 96,8.754160855076936 C 96.2,8.996491718902648 96.8,9.404854159724586 97,9.64421129140892 C 97.2,9.883568423093255 97,9.811829979413643 97,9.950946513498607 C 97,10.090063047583572 96.8,10.046740744563786 97,10.339793961833745 C 97.2,10.632847179103704 97.8,11.176571812622555 98,11.416212599848402 C 98.2,11.655853387074249 98,11.597307104621793 98,11.537997897962978 C 98,11.478688691304162 97.8,11.230407746967874 98,11.119666566554326 C 98.2,11.008925386140778 98.8,10.860941484480096 99,10.984291995895234 C 99.2,11.107642507310372 99,11.585993698083062 99,11.736419123630018";
+                var ticker_price_24h = AllCoinsData[i].ticker_price_24h;
+                // for (let i=0;i<ticker_price_24h.count:i++){
+                //
+                // }
+
+
+                var path = document.createElement("path");
+                path.setAttributeNS(null,"d",pathData);
+                path.setAttributeNS(null,"stroke-width","1.7");
+                path.className = "SparkLine__Path-sc-9wg5ja-1 bYRixQ";
+
+                svg.appendChild(path);
+                tdD.appendChild(svg);
+                ////////////////////////////////////////////////tdE
+                var tdE = document.createElement("td");
+                var h4E = document.createElement("h4");
+                h4E.className="allTableTexts";
+                var spanE = document.createElement("span");
+                var volumeE =AllCoinsData[i].marketcap;
+                var symbleE ="";
+                if (volumeE>=1000000&&volumeE<1000000000){
+                    volumeE/=1000000.0;
+                    symbleE= "M"
+                }
+                else if(volumeE>=1000000000){
+                    volumeE/=1000000000.0;
+                    symbleE= "B"
+                }
+                spanE.innerHTML = "US$"+ Math.round((volumeE + Number.EPSILON) * 10) / 10; //1,000,000,000 or 1,000,000
+                spanE.innerHTML+= symbleE;
+                h4E.appendChild(spanE);
+                tdE.appendChild(h4E);
+                ////////////////////////////////////////////////tdF
+                var tdF = document.createElement("td");
+                var h4F = document.createElement("h4");
+                h4F.className="allTableTexts";
+                var spanF = document.createElement("span");
+                var volumeF =AllCoinsData[i].marketcap;
+                var symbleF ="";
+                if (volumeF>=1000000&&volumeF<1000000000){
+                    volumeF/=1000000.0;
+                    symbleF= "M"
+                }
+                else if(volumeF>=1000000000){
+                    volumeF/=1000000000.0;
+                    symbleF= "B"
+                }
+                spanF.innerHTML = "US$"+ Math.round((volumeF + Number.EPSILON) * 10) / 10; //1,000,000,000 or 1,000,000
+                spanF.innerHTML+= symbleF;
+                h4F.appendChild(spanF);
+                tdF.appendChild(h4F);
+                ////////////////////////////////////////////////append tr
+                tr.appendChild(td);
+                tr.appendChild(tdB);
+                tr.appendChild(tdC);
+                tr.appendChild(tdD);
+                tr.appendChild(tdE);
+                tr.appendChild(tdF);
+                tbody.appendChild(tr);
+            }
+
+        }
+    }
+    window.onload = function () {
+         layoutCoinsTable();
+
+    }
+
+</script>
+<!--Firebase SDK-->
+<script>
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const loadEl = document.querySelector('#load');
+        // Firebase App (the core Firebase SDK) is always required and must be listed first
+        //import firebase from "firebase/app";
+        // var firebase = require('firebase');
+        // var firebaseui = require('firebaseui');
+        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+        // // The Firebase SDK is initialized and available here!
+
+
+        ////////////////////////////////
+        //       Firebase Auth        //
+        ////////////////////////////////
+//         设置身份验证状态观察者并获取用户数据
+//         针对应用中需要已登录用户的信息的每个页面，将观察者附加到全局身份验证对象。每当用户的登录状态发生变化时，系统都会调用此观察者。
+//
+// 请使用 onAuthStateChanged 方法附加观察者。当用户成功登录时，您可以从观察者中获取用户的相关信息。
+        var User;
+        var name;
+        var email;
+        var photoUrl;
+        var emailVerified;
+        var uid;
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                // User is signed in, see docs for a list of available properties
+                // https://firebase.google.com/docs/reference/js/firebase.User
+                User = user;
+                name = user.displayName;
+                email = user.email;
+                photoUrl = user.photoURL;
+                emailVerified = user.emailVerified;
+                uid = user.uid;  // The user's ID, unique to the Firebase project. Do NOT use
+                                 // this value to authenticate with your backend server, if
+                                 // you have one. Use User.getToken() instead.
+                user.providerData.forEach(function (profile) {
+                    console.log("Sign-in provider: " + profile.providerId);
+                    console.log("  Provider-specific UID: " + profile.uid);
+                    console.log("  Name: " + profile.displayName);
+                    console.log("  Email: " + profile.email);
+                    console.log("  Photo URL: " + profile.photoURL);
+                });
+                console.info("detected signedin user with UID:%s",uid);
+
+
+
+                // ...
+            } else {
+                // // User is signed out
+                // // ...
+                // console.info("User haven't logged in");
+                // // Initialize the FirebaseUI Widget using Firebase.
+                // var ui = new firebaseui.auth.AuthUI(firebase.auth());
+                // ui.start('#firebaseui-auth-container', {
+                //     // Whether to upgrade anonymous users should be explicitly provided.
+                //     // The user must already be signed in anonymously before FirebaseUI is
+                //     // rendered.
+                //     autoUpgradeAnonymousUsers: true,
+                //     signInSuccessUrl: '/prices.html',
+                //     signInOptions: [
+                //         // List of OAuth providers supported.
+                //         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+                //         {
+                //             provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,//password/email login
+                //             signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD//email link login
+                //         }
+                //     ],callbacks: {
+                //         // signInFailure callback must be provided to handle merge conflicts which
+                //         // occur when an existing credential is linked to an anonymous user.
+                //         signInFailure: function(error) {
+                //             // For merge conflicts, the error.code will be
+                //             // 'firebaseui/anonymous-upgrade-merge-conflict'.
+                //             if (error.code != 'firebaseui/anonymous-upgrade-merge-conflict') {
+                //                 return Promise.resolve();
+                //             }
+                //             // The credential the user tried to sign in with.
+                //             var cred = error.credential;
+                //             // Copy data from anonymous user to permanent user and delete anonymous
+                //             // user.
+                //             // ...
+                //             // Finish sign-in after data is copied.
+                //             return firebase.auth().signInWithCredential(cred);
+                //         }
+                //     }
+                //     // Other config options...
+                // });
+                // // Is there an email link sign-in?
+                // if (ui.isPendingRedirect()) {
+                //     ui.start('#firebaseui-auth-container', uiConfig);
+                // }
+                // // This can also be done via:
+                // if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
+                //     ui.start('#firebaseui-auth-container', uiConfig);
+                // }
+                // var uiConfig = {
+                //     callbacks: {
+                //         signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+                //             // User successfully signed in.
+                //             // Return type determines whether we continue the redirect automatically
+                //             // or whether we leave that to developer to handle.
+                //             return true;
+                //         },
+                //         uiShown: function () {
+                //             // The widget is rendered.
+                //             // Hide the loader.
+                //             document.getElementById('loader').style.display = 'none';
+                //         }
+                //     },
+                //     // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+                //     signInFlow: 'popup',
+                //     signInSuccessUrl: '/prices.html',
+                //     signInOptions: [
+                //         // Leave the lines as is for the providers you want to offer your users.
+                //         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+                //         firebase.auth.EmailAuthProvider.PROVIDER_ID
+                //     ],
+                //     // Terms of service url.
+                //     tosUrl: 'https://www.termsfeed.com/live/26d0bf4a-6aa9-4596-8728-a017513b1001',
+                //     // Privacy policy url.
+                //     privacyPolicyUrl: 'https://www.freeprivacypolicy.com/live/e63aa8ee-5ece-4cc4-922e-5a2e43d62b36'
+                // };
+                // // The start method will wait until the DOM is loaded.
+                // ui.start('#firebaseui-auth-container', uiConfig);
+            }
+        });
+        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
+        ///////////////////////////////////
+        //      Firestore Dtabase        //
+        ///////////////////////////////////
+        var db =firebase.firestore();//fireStore database handler
+        // // add date
+        // db.collection("usersData").add({
+        //     first: "Ada",
+        //     last: "Lovelace",
+        //     born: 1815
+        // })
+        //     .then((docRef) => {
+        //         console.log("Document written with ID: ", docRef.id);
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error adding document: ", error);
+        //     });
+        // db.collection('users').doc(user_id).set({foo:'bar'}, {merge: true});
+
+        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
+        // firebase.messaging().requestPermission().then(() => { });
+        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
+        // firebase.analytics(); // call to activate
+        // firebase.analytics().logEvent('tutorial_completed');
+        // firebase.performance(); // call to activate
+        //
+        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+
+        try {
+
+
+            let app = firebase.app();
+            let features = [
+                'auth',
+                'database',
+                'firestore',
+                'messaging',
+                'storage',
+                'analytics',
+                'remoteConfig',
+                'performance',
+            ].filter(feature => typeof app[feature] === 'function');
+
+
+
+//注册新用户
+            // 创建一个表单，允许新用户使用自己的电子邮件地址和密码注册您的应用。当用户填好该表单后，验证用户提供的电子邮件地址和密码，然后将其传递给 createUserWithEmailAndPassword 方法：
+            // firebase.auth().createUserWithEmailAndPassword(email, password)
+            //     .then((userCredential) => {
+            //         // Signed in
+            //         var user = userCredential.user;
+            //         // ...
+            //
+            //         var actionCodeSettings = {
+            //             // URL you want to redirect back to. The domain (www.example.com) for this
+            //             // URL must be in the authorized domains list in the Firebase Console.
+            //             url: 'douglasproject.web.app',
+            //             // This must be true.
+            //             handleCodeInApp: true,
+            //             iOS: {
+            //                 bundleId: 'com.example.ios'
+            //             },
+            //             android: {
+            //                 packageName: 'com.example.android',
+            //                 installApp: true,
+            //                 minimumVersion: '12'
+            //             },
+            //             dynamicLinkDomain: 'douglasproject.web.app'
+            //         };
+            //     })
+            //     .catch((error) => {
+            //         var errorCode = error.code;
+            //         var errorMessage = error.message;
+            //         // ..
+            //     });
+//现有用户登录
+//     创建一个表单，允许现有用户使用自己的电子邮件地址和密码登录。当用户填好该表单后，调用 signInWithEmailAndPassword 方法：
+//             firebase.auth().signInWithEmailAndPassword(email, password)
+//                 .then((userCredential) => {
+//                     // Signed in
+//                     var user = userCredential.user;
+//                     // ...
+//
+//                 })
+//                 .catch((error) => {
+//                     var errorCode = error.code;
+//                     var errorMessage = error.message;
+//                 });
+
+// //如需将用户退出登录，请调用 signOut：
+//             firebase.auth().signOut().then(() => {
+//                 // Sign-out successful.
+//             }).catch((error) => {
+//                 // An error happened.
+//             });
+
+
+
+
+
+        } catch (e) {
+            console.error(e);
+
+        }
+    });
+</script>
+
+
+
 </body>
 
 </html>
+
+
+
+</svg>
